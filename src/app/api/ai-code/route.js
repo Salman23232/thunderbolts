@@ -31,7 +31,7 @@ export async function POST(req) {
   try {
     // Using OpenRouter to call the API and get AI response
     const response = await openai.chat.completions.create({
-      model: "openrouter/optimus-alpha",
+      model: "deepseek/deepseek-r1:free",
       // You can choose the model you want (e.g., "mistral-7b", "gemma", etc.)
       messages: [{ role: "user", content: prompt }],
     });
