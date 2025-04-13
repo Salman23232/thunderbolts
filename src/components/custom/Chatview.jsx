@@ -141,7 +141,7 @@ const Chatview = () => {
             {UserInput && (
               <ArrowRight
                 onClick={() => generate(UserInput)}
-                className="bg-blue-500 hover:bg-blue-600 transition h-10 w-10 p-2 rounded-md cursor-pointer mt-2"
+                className="bg-blue-500 hover:bg-blue-600 transition h-8 w-8 p-2 rounded-md cursor-pointer mt-2"
               />
             )}
           </div>

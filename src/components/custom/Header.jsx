@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { Context } from "@/context/Context";
 import { Rocket, Share } from "lucide-react";
+import SignIn from "./Signin";
 
 const Header = () => {
   const { UserDetails, action, setAction } = useContext(Context);
@@ -14,6 +15,8 @@ const Header = () => {
       timeStamp: Date.now(),
     });
   };
+    const [openDialog, setOpenDialog] = useState(false);
+  
 
   return (
     <div className="flex justify-between items-center px-4 py-2 fixed top-0 left-0 right-0 z-10 mb-16 bg-black/90 shadow-[0_0_15px_white] backdrop-blur-sm">
@@ -33,14 +36,18 @@ const Header = () => {
       {!UserDetails?.name ? (
         <div className="flex gap-4">
           <Button
+          onClick={()=>setOpenDialog(true)}
             variant="ghost"
             className="text-white hover:bg-white/10 transition"
           >
             Sign in
           </Button>
-          <Button className="text-white bg-blue-500 hover:bg-blue-600 transition shadow-md">
+          <Button className="text-white bg-blue-500 hover:bg-blue-600 transition shadow-md"
+          onClick={()=>setOpenDialog(true)}
+          >
             Get Started
           </Button>
+          <SignIn OpenDialog={openDialog} CloseDialog={() => setOpenDialog(false)} />
         </div>
       ) : (
         <div className="flex gap-4">

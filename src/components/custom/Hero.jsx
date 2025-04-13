@@ -78,13 +78,13 @@ const Hero = () => {
             <textarea
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              className="bg-transparent w-full h-24 text-white placeholder:text-gray-500 text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2 transition"
+              className="bg-transparent w-full h-24 text-white placeholder:text-gray-500 text-sm outline-none resize-none rounded-lg p-2 transition"
               placeholder="Describe what you want to build..."
             />
             {userInput && (
               <ArrowRight
                 onClick={() => generate(userInput)}
-                className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white h-10 w-10 p-2 rounded-lg cursor-pointer transition"
+                className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white h-8 w-8 p-2 rounded-lg cursor-pointer transition"
               />
             )}
           </div>
