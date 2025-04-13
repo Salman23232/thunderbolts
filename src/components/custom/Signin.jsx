@@ -36,7 +36,6 @@ const SignIn = ({ OpenDialog, CloseDialog }) => {
         email: user.email,
         picture: user.picture,
         uid: uuid4(),
-        token:10000
       });
       window.localStorage.setItem("user", JSON.stringify(user));
       setUserDetails(userInfo?.data);
@@ -61,8 +60,6 @@ const SignIn = ({ OpenDialog, CloseDialog }) => {
         <Button onClick={googleLogin} className="w-full mt-2">
           Sign in with Google
         </Button>
-
-        <Button className="w-full mt-4">Sign In</Button>
       </DialogContent>
     </Dialog>
   );

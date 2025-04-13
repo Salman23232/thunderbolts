@@ -48,7 +48,6 @@ export default function Pricing() {
         </p>
 
         <div className="bg-gray-800 rounded-lg p-4 flex flex-col sm:flex-row justify-between items-center mb-8 w-full">
-          <span className="text-white mb-2 sm:mb-0">🔒 {UserDetails?.token} tokens left.</span>
           <span className="text-gray-300 text-sm">
             Need more tokens? <a href="#" className="underline">Upgrade your plan below</a>
           </span>

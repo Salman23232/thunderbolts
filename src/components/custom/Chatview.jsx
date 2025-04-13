@@ -12,9 +12,9 @@ import { ClipLoader } from "react-spinners";
 import Prompt from "@/data/Prompt";
 import { useSidebar } from "../ui/sidebar";
 
-export const countToken = (inputText) => {
-  return inputText.trim().split(/\s+/).filter(word => word).length;
-};
+// export const countToken = (inputText) => {
+//   return inputText.trim().split(/\s+/).filter(word => word).length;
+// };
 
 const Chatview = () => {
   const { id } = useParams();
@@ -25,7 +25,7 @@ const Chatview = () => {
   const updateMessages = useMutation(api.workspace.updateWorkSpace);
   const messagesEndRef = useRef(null);
   const { toggleSidebar } = useSidebar();
-  const updateTokens = useMutation(api.users.UpdateToken);
+  // const updateTokens = useMutation(api.users.UpdateToken);
 
   useEffect(() => {
     if (id) getWorkSpaceData();
@@ -63,11 +63,11 @@ const Chatview = () => {
       const updatedMessages = [...Messages, aiResponse];
       setMessages(updatedMessages);
 
-      const token = Number(UserDetails?.token ?? 0) - countToken(JSON.stringify(aiResponse));
-      await updateTokens({
-        userId: UserDetails?._id || "",
-        token,
-      });
+      // const token = Number(UserDetails?.token ?? 0) - countToken(JSON.stringify(aiResponse));
+      // await updateTokens({
+      //   userId: UserDetails?._id || "",
+      //   token,
+      // });
 
       await updateMessages({
         messages: updatedMessages,

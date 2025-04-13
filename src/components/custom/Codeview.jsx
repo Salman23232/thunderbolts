@@ -16,7 +16,7 @@ import { useConvex, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useParams } from "next/navigation";
 import { ClipLoader } from "react-spinners";
-import { countToken } from "./Chatview";
+// import { countToken } from "./Chatview";
 import CodePreviewComponent from "./CodePreviewComponent";
 
 const Codeview = () => {
@@ -28,7 +28,7 @@ const Codeview = () => {
   const [files, setFiles] = useState(Lookup.DEMO.defaultFiles);
 
   const { Messages, setMessages, UserDetails } = useContext(Context);
-  const updateTokens = useMutation(api.users.UpdateToken);
+  // const updateTokens = useMutation(api.users.UpdateToken);
   const updateFiles = useMutation(api.workspace.updateAiChatWorkSpace);
 
   useEffect(() => {
@@ -69,8 +69,8 @@ const Codeview = () => {
         ...aiResponse?.files,
       };
 
-      const token = Number(UserDetails?.token) - countToken(JSON.stringify(aiResponse));
-      await updateTokens({ userId: UserDetails?._id, token });
+      // const token = Number(UserDetails?.token) - countToken(JSON.stringify(aiResponse));
+      // await updateTokens({ userId: UserDetails?._id, token });
       await updateFiles({ workspaceId: id, files: aiResponse?.files });
 
       setFiles(mergedFiles);

@@ -1,14 +1,14 @@
 "use client";
 
-import { Context } from "@/context/Context";
-import Lookup from "../../data/Lookup";
-import { ArrowRight, Link } from "lucide-react";
 import { useContext, useState } from "react";
-import Signin from "./Signin";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
-import Header from "./Header";
+import { useMutation } from "convex/react";
+import { ArrowRight, Link } from "lucide-react";
+import Spline from "@splinetool/react-spline";
+
+import { Context } from "@/context/Context";
+import Signin from "./Signin";
+import { api } from "../../../convex/_generated/api";
 
 const SUGGESTIONS = [
   "Create a simple to-do list app",
@@ -19,86 +19,94 @@ const SUGGESTIONS = [
 ];
 
 const Hero = () => {
-  const [UserInput, setUserInput] = useState("");
-  const { Messages, setMessages, UserDetails, setUserDetails } = useContext(Context);
+  const [userInput, setUserInput] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const { setMessages, UserDetails } = useContext(Context);
   const createWorkspace = useMutation(api.workspace.createWorkSpace);
-  const [OpenDialog, setOpenDialog] = useState(false);
   const router = useRouter();
 
   const generate = async (input) => {
     if (!UserDetails?.name) {
       setOpenDialog(true);
-      
       return;
     }
-    const msg = {
-      role: "user",
-      content: input,
-    };
+
     if (!UserDetails?._id) {
       console.error("Convex user ID not found");
       return;
     }
+
+    const msg = { role: "user", content: input };
     setMessages(msg);
+
     const workspaceId = await createWorkspace({
       messages: [msg],
       user: UserDetails._id,
     });
-    console.log(workspaceId);
-    router.push("/workspace/" + workspaceId);
+
+    router.push(`/workspace/${workspaceId}`);
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-white overflow-hidden w-full">
-      <div className="flex flex-col items-center justify-center text-center px-4 pt-40 gap-4">
-        <h2 className="text-5xl font-bold drop-shadow-glow">
-          What do you want to <span className="text-blue-500">build</span>?
-        </h2>
-        <p className="text-gray-400 font-medium">
-          Prompt, run, edit and deploy full-stack web apps.
-        </p>
-        <div className="flex flex-wrap max-w-2xl items-center justify-center mt-5 gap-2">
+    <div className="relative min-h-screen px-6 md:px-20 pt-28 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+      {/* Left Section */}
+      <div className="flex flex-col gap-8 z-10">
+        <div>
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-glow text-white">
+            What do you want to <span className="text-blue-500">build</span>?
+          </h1>
+          <p className="text-gray-400 text-base mt-2">
+            Prompt, run, edit and deploy full-stack web apps with one command.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
           {SUGGESTIONS.map((suggestion, index) => (
-            <h2
-              className="p-1 px-3 border border-gray-600 rounded-full text-sm text-gray-400 hover:text-white hover:border-white cursor-pointer transition"
+            <button
               key={index}
+              className="px-4 py-2 rounded-full text-sm border border-gray-600 text-gray-300 hover:border-blue-500 hover:text-white transition duration-200"
               onClick={() => generate(suggestion)}
             >
               {suggestion}
-            </h2>
+            </button>
           ))}
         </div>
-      </div>
 
-      {/* Input Box at Bottom Center */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-full max-w-3xl px-4">
-        <div className="p-5 border border-blue-500 rounded-xl bg-[#111] shadow-xl shadow-blue-500/20">
-          <div className="flex gap-2">
+        {/* User Input */}
+        <div className="bg-[#111] border border-blue-600 rounded-2xl shadow-lg shadow-blue-500/20 p-5">
+          <div className="flex gap-3 items-start">
             <textarea
-              type="text"
+              value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              className="outline-none bg-transparent w-full h-28 max-h-56 resize-none text-white placeholder:text-gray-500"
-              placeholder="What you want to build"
+              className="bg-transparent w-full h-24 text-white placeholder:text-gray-500 text-sm outline-none resize-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2 transition"
+              placeholder="Describe what you want to build..."
             />
-            {UserInput && (
+            {userInput && (
               <ArrowRight
-                onClick={() => generate(UserInput)}
-                className="bg-blue-500 hover:bg-blue-600 transition h-10 w-10 p-2 rounded-md cursor-pointer"
+                onClick={() => generate(userInput)}
+                className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white h-10 w-10 p-2 rounded-lg cursor-pointer transition"
               />
             )}
           </div>
-          <div>
-            <Link />
+          <div className="mt-2 text-gray-600 flex justify-end">
+            <Link className="h-4 w-4" />
           </div>
         </div>
+
+        <Signin OpenDialog={openDialog} CloseDialog={() => setOpenDialog(false)} />
       </div>
 
-      <Signin OpenDialog={OpenDialog} CloseDialog={(False) => setOpenDialog(False)} />
+      {/* Spline 3D Element */}
+      <Spline
+        scene="https://prod.spline.design/GBMiFic7a8H0PAkN/scene.splinecode"
+        className="fixed bottom-0 pb-[50rem] left-[28rem] w-[280px] h-[50px] md:w-[400px] md:h-[200px] z-0"
+      />
 
-      {/* Glow effect style */}
       <style jsx>{`
         .drop-shadow-glow {
-          text-shadow: 0 0 10px rgba(59, 130, 246, 0.6), 0 0 20px rgba(59, 130, 246, 0.4);
+          text-shadow:
+            0 0 10px rgba(59, 130, 246, 0.6),
+            0 0 20px rgba(59, 130, 246, 0.4);
         }
       `}</style>
     </div>
