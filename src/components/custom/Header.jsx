@@ -28,9 +28,9 @@ const Header = () => {
           height={60}
           className="rounded-md"
         />
-        <h2 className="text-2xl font-black text-white drop-shadow-lg">
-          Thunder Bolts
-        </h2>
+        <h1 className="text-2xl font-black text-white drop-shadow-lg">
+          ThunderBolts
+        </h1>
       </div>
 
       {!UserDetails?.name ? (
