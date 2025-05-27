@@ -29,7 +29,7 @@ const Header = () => {
           className="rounded-md"
         />
         <h1 className="text-3xl font-black  text-white drop-shadow-lg">
-          ThunderBolts
+          ThunderBolt
         </h1>
       </div>
 
