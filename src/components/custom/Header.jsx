@@ -28,7 +28,7 @@ const Header = () => {
           height={60}
           className="rounded-md"
         />
-        <h1 className="text-2xl font-black text-white drop-shadow-lg">
+        <h1 className="text-3xl font-black  text-white drop-shadow-lg">
           ThunderBolts
         </h1>
       </div>
