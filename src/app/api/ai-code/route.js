@@ -33,7 +33,7 @@ export async function POST(req) {
     async start(controller) {
       try {
         const completion = await openai.chat.completions.create({
-          model: "mistralai/mixtral-8x7b", // supports streaming
+          model: "openchat/openchat-3.5", // supports streaming
           stream: true,
           messages: [{ role: "user", content: prompt }],
         });
