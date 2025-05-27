@@ -57,29 +57,45 @@ const Codeview = () => {
   }, [Messages]);
 
   const GenerateAiCode = async () => {
-    const prompt = Messages[Messages.length - 1]?.content + Prompt.GEN_AI_CODE;
-    setLoading(true);
-    try {
-      const result = await axios.post("/api/ai-code", { prompt });
-      const aiResponse = result.data;
-      console.log(aiResponse);
-      
-      const mergedFiles = {
-        ...Lookup.DEMO.defaultFiles,
-        ...aiResponse?.files,
-      };
+  setLoading(true);
+  const prompt = Messages[Messages.length - 1]?.content + Prompt.GEN_AI_CODE;
+  const response = await fetch("/api/ai-code", {
+    method: "POST",
+    body: JSON.stringify({ prompt }),
+    headers: { "Content-Type": "application/json" },
+  });
 
-      // const token = Number(UserDetails?.token) - countToken(JSON.stringify(aiResponse));
-      // await updateTokens({ userId: UserDetails?._id, token });
-      await updateFiles({ workspaceId: id, files: aiResponse?.files });
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
 
-      setFiles(mergedFiles);
-    } catch (error) {
-      console.error("❌ Error generating AI code:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  let fullText = "";
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    const chunk = decoder.decode(value);
+    fullText += chunk;
+
+    // Optionally: Update the UI with streamed data (line by line)
+    console.log("New chunk:", chunk);
+    // Update Sandpack editor or textarea here live
+  }
+
+  try {
+    const parsed = JSON.parse(fullText); // optional: wrap in try/catch if response is JSON
+    const mergedFiles = {
+      ...Lookup.DEMO.defaultFiles,
+      ...parsed.files,
+    };
+    await updateFiles({ workspaceId: id, files: parsed.files });
+    setFiles(mergedFiles);
+  } catch {
+    console.log("Partial streamed text:", fullText);
+  }
+
+  setLoading(false);
+};
+
 
   return (
     <div className="relative mt-16 p-4">

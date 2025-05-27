@@ -17,37 +17,45 @@
 // }
 
 import OpenAI from "openai";
+import { NextResponse } from "next/server";
 
-// Initialize OpenAI instance using OpenRouter API endpoint
+// Setup OpenRouter client
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1", // Specify OpenRouter base URL
+  baseURL: "https://openrouter.ai/api/v1",
 });
 
 export async function POST(req) {
-  const body = await req.json();
-  const prompt = body.prompt;
+  const { prompt } = await req.json();
 
-  try {
-    // Using OpenRouter to call the API and get AI response
-    const response = await openai.chat.completions.create({
-      model: "deepseek/deepseek-r1:free",
-      // You can choose the model you want (e.g., "mistral-7b", "gemma", etc.)
-      messages: [{ role: "user", content: prompt }],
-    });
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        const completion = await openai.chat.completions.create({
+          model: "openai/gpt-3.5-turbo", // supports streaming
+          stream: true,
+          messages: [{ role: "user", content: prompt }],
+        });
 
-    const result = response.choices[0].message.content;
-    const parsedResult = JSON.parse(result)
+        for await (const chunk of completion) {
+          const content = chunk.choices[0]?.delta?.content || "";
+          controller.enqueue(encoder.encode(content));
+        }
+        controller.close();
+      } catch (err) {
+        console.error("Stream error:", err);
+        controller.enqueue(encoder.encode("❌ Error generating code."));
+        controller.close();
+      }
+    },
+  });
 
-    // Send the AI response back
-    return new Response( JSON.stringify(parsedResult), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    })
-  } catch (error) {
-    console.error("❌ OpenRouter API Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
-  }
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain",
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive",
+    },
+  });
 }
